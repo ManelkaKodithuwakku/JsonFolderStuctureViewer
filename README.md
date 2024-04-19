@@ -13,7 +13,7 @@ This Python application allows users to visualize a folder structure in a tree v
 2. Navigate to the project directory:
 
    ```bash
-   cd folder-structure-visualizer
+   cd JsonFolderStuctureViewer
    ```
 
 3. Install the required Python libraries:

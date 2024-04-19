@@ -19,6 +19,7 @@ class FolderTreeView:
         
         self.text_area = tk.Text(root, height=10)
         self.text_area.pack(padx=10, pady=10)
+        self.text_area.tag_configure("error", foreground="red")
         
         self.clear_button = tk.Button(root, text="Clear", command=self.clear_files)
         self.clear_button.pack(side=tk.BOTTOM)
@@ -26,7 +27,25 @@ class FolderTreeView:
         self.populate_treeview(self.folder_structure, "")
         
     def populate_treeview(self, items, parent):
+
+        if items is None:
+            self.text_area.insert(tk.END, "Error: Folder structure is empty", "error")
+            return
+
+        if not isinstance(items, list):
+            self.text_area.insert(tk.END, "Error: Invalid Json Format", "error")
+            return
+
         for item in items:
+            if not isinstance(item, dict):
+                self.tree.delete(*self.tree.get_children())
+                self.text_area.insert(tk.END, "Error: Invalid JSON Format", "error")
+                return
+            elif "name" not in item:
+                self.tree.delete(*self.tree.get_children())
+                self.text_area.insert(tk.END, "Error: name is required field in JSON Format", "error")
+                return
+
             name = item["name"]
             if "children" in item:
                 folder_id = self.tree.insert(parent, "end", text=name, open=True)
@@ -34,12 +53,17 @@ class FolderTreeView:
             else:
                 self.tree.insert(parent, "end", text=name)
     
-    def detach_files(self):
+
+    def process_selected_files(self, action):
         selected_item_tuple = self.tree.selection()
         for selected_item in selected_item_tuple:
             selected_file = self.tree.item(selected_item, "text")
-            if selected_file in self.selected_files:
-                self.selected_files.remove(selected_file)
+            if action == "attach":
+                if selected_file not in self.selected_files:
+                    self.selected_files.append(selected_file)
+            elif action == "detach":
+                if selected_file in self.selected_files:
+                    self.selected_files.remove(selected_file)
         self.update_text_area()
     
     def update_text_area(self):
@@ -47,12 +71,10 @@ class FolderTreeView:
         self.text_area.insert(tk.END, "\n".join(self.selected_files))
     
     def attach_files(self):
-        selected_item_tuple = self.tree.selection()
-        for selected_item in selected_item_tuple:
-            selected_file = self.tree.item(selected_item, "text")
-            if selected_file not in self.selected_files:
-                self.selected_files.append(selected_file)
-        self.update_text_area()
+        self.process_selected_files("attach")
+    
+    def detach_files(self):
+        self.process_selected_files("detach")
     
     def clear_files(self):
         self.selected_files = []
