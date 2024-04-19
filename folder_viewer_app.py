@@ -14,10 +14,23 @@ class FolderTreeView:
         self.root = root
         self.folder_structure = folder_structure
         self.selected_files = []
+
+        # Create a frame to contain the tree view and scroll bar
+        tree_frame = tk.Frame(root)
+        tree_frame.pack(fill=tk.X, pady=(0, 10))
         
         # Create a treeview to display the folder structure
-        self.tree = ttk.Treeview(self.root)
-        self.tree.pack(fill=tk.BOTH, padx=10, pady=10)
+        self.tree = ttk.Treeview(tree_frame)
+        self.tree.pack(fill='both', side=tk.LEFT, expand=True)
+
+        # Add scrollbar to the tree view
+        scrollbar = tk.Scrollbar(tree_frame, command=self.tree.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.tree.config(yscrollcommand=scrollbar.set)
+
+        # Add a label for instructions
+        instructions_label = tk.Label(root, text="Select one or more items and then click Attach or Detach:")
+        instructions_label.pack(anchor=tk.W, padx=(10,0))
 
         # Create a frame to contain the buttons
         button_frame = tk.Frame(root)
@@ -37,7 +50,7 @@ class FolderTreeView:
 
         # Create the Clear button
         self.clear_button = tk.Button(root, text="Clear", command=self.clear_files)
-        self.clear_button.pack(side=tk.BOTTOM)
+        self.clear_button.pack(side=tk.BOTTOM, padx=10, fill=tk.BOTH)
         
         # Populate the treeview with the provided folder structure
         self.populate_treeview(self.folder_structure, "")
