@@ -60,7 +60,7 @@ class FolderTreeView:
 
 def main():
     root = tk.Tk()
-    root.title("Folder Tree View")
+    root.title("Folder Structure Visualizer")
 
     folder_structure = load_folder_structure_from_json("folder_structure.json")
     FolderTreeView(root, folder_structure)
