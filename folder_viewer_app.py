@@ -18,19 +18,26 @@ class FolderTreeView:
         # Create a treeview to display the folder structure
         self.tree = ttk.Treeview(self.root)
         self.tree.pack(fill=tk.BOTH, padx=10, pady=10)
+
+        # Create a frame to contain the buttons
+        button_frame = tk.Frame(root)
+        button_frame.pack(fill=tk.X, pady=(0, 10))
         
-        # Create buttons for attaching, detaching, and clearing files
-        self.attach_button = tk.Button(root, text="Attach", command=self.attach_files)
-        self.attach_button.pack()
-        self.detached_button = tk.Button(root, text="Detach", command=self.detach_files)
-        self.detached_button.pack()
-        self.clear_button = tk.Button(root, text="Clear", command=self.clear_files)
-        self.clear_button.pack(side=tk.BOTTOM)
+        # Create buttons for attaching and detaching files
+        self.attach_button = tk.Button(button_frame, text="Attach", command=self.attach_files)
+        self.attach_button.pack(side=tk.LEFT, padx=(10,5))
+
+        self.detach_button = tk.Button(button_frame, text="Detach", command=self.detach_files)
+        self.detach_button.pack(side=tk.LEFT, padx=(5,10))
         
         # Create a text area for displaying error messages
         self.text_area = tk.Text(root, height=10)
-        self.text_area.pack(padx=10, pady=10)
+        self.text_area.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
         self.text_area.tag_configure("error", foreground="red")
+
+        # Create the Clear button
+        self.clear_button = tk.Button(root, text="Clear", command=self.clear_files)
+        self.clear_button.pack(side=tk.BOTTOM)
         
         # Populate the treeview with the provided folder structure
         self.populate_treeview(self.folder_structure, "")
@@ -94,8 +101,12 @@ class FolderTreeView:
         """
         Update the text area with the list of selected files.
         """
+        # Enable text area for updating content
+        self.text_area.config(state=tk.NORMAL)
         self.text_area.delete(1.0, tk.END)
         self.text_area.insert(tk.END, "\n".join(self.selected_files))
+        # Disable text area to prevent manual editing
+        self.text_area.config(state=tk.DISABLED)
     
     def attach_files(self):
         """
