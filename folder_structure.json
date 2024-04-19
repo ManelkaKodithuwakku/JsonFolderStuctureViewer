@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Folder 1",
+      "children": [
+        {
+          "name": "Subfolder 1",
+          "children": [
+            { "name": "File 1.txt" },
+            { "name": "File 2.txt" }
+          ]
+        },
+        { "name": "File 3.txt" }
+      ]
+    },
+    {
+      "name":"File 6.txt"
+    },
+    {
+      "name": "Folder 2",
+      "children": [
+        { "name": "File 4.txt" },
+        { "name": "File 5.txt" }
+      ]
+    },
+    {
+      "name":"Folder 3",
+      "children":[]
+    }
+]
+  
